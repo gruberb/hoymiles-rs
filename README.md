@@ -17,7 +17,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 - `git clone git@github.com:gruberb/hoymiles-rs.git`
 - `cd hoymiles-rs`
 - Create `.env` file with the key `HOYMILES_TOKEN=`.
-- `cargo build`
+- `cargo build --release`
 
 ## Usage
 
