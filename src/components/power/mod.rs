@@ -1,20 +1,21 @@
 pub(crate) mod command;
 
 use self::command::{FileType, Power};
-use crate::routes::power::{fetch_power_data, PowerRecord};
+use crate::{
+    config::read_config,
+    routes::power::{fetch_power_data, PowerRecord},
+};
 
 pub(crate) async fn handle_command(cmd: Power) {
-    load_env();
-
-    match std::env::var("HOYMILES_TOKEN") {
-        Ok(token) => {
-            if token.is_empty() {
+    match read_config() {
+        Ok(config) => {
+            if config.hoymiles_token.is_empty() {
                 println!(
-                    "You have to run `hoymiles login` first to set the HOYMILES_TOKEN env variable"
+                    "You have to run `hoymiles login` first to set the hoymiles_token in the config file."
                 );
                 return;
             }
-            let power_data = fetch_power_data(cmd.ssid, cmd.date, token).await;
+            let power_data = fetch_power_data(cmd.ssid, cmd.date, config.hoymiles_token).await;
 
             if power_data.is_err() {
                 println!("Failed to fetch power data");
@@ -45,10 +46,6 @@ pub(crate) async fn handle_command(cmd: Power) {
             "You have to run `hoymiles loign` first to set the HOYMILES_TOKEN env variable"
         ),
     }
-}
-
-fn load_env() {
-    dotenv::dotenv().ok();
 }
 
 fn print_power_records_table(records: &[PowerRecord]) {

@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 
 pub(crate) mod components;
+pub(crate) mod config;
 pub(crate) mod routes;
 
 use tracing_log::LogTracer;
