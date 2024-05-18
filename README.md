@@ -16,6 +16,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 - `git clone git@github.com:gruberb/hoymiles-rs.git`
 - `cd hoymiles-rs`
+- Create `.env` file with the key `HOYMILES_TOKEN=`.
 - `cargo build`
 
 ## Usage
@@ -36,10 +37,14 @@ Options:
   -h, --help        Print help
 ```
 
+We first need to get the token from HoyMiles.
+
 ```bash
 ❯ ./target/release/hoymiles-rs login --user-name USERNAME --password PASSWORD
 Set HOYMILES_TOKEN env variable successfully.
 ```
+
+This will overwrite the `HOYMILES_TOKEN` value in your `.env` file. Afterwards, we can start reading data from a specific installation for a specific day.
 
 ```bash
 ❯ ./target/release/hoymiles-rs power --ssid 123456789 --date 2024-01-01
