@@ -16,7 +16,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 - `git clone git@github.com:gruberb/hoymiles-rs.git`
 - `cd hoymiles-rs`
-- Create `.env` file with the key `HOYMILES_TOKEN=`.
 - `cargo build --release`
 
 ## Easy Installation
@@ -45,12 +44,12 @@ Options:
 
 We first need to get the token from HoyMiles.
 
-```bash
+````bash
 ❯ hoymiles-rs login --user-name USERNAME --password PASSWORD
-Set HOYMILES_TOKEN env variable successfully.
+Successfully saved auth token to config file in /Users/username/.config/hoymiles-rs/config.toml
 ```
 
-This will overwrite the `HOYMILES_TOKEN` value in your `.env` file. Afterwards, we can start reading data from a specific installation for a specific day.
+Afterwards, we can start reading data from a specific installation for a specific day.
 
 ```bash
 ❯ hoymiles-rs power --help
@@ -64,7 +63,7 @@ Options:
       --date <DATE>  Pass the day you want to fetch data for [env: SOLAR_DATE=]
       --save <SAVE>  Save the response in a CSV or JSON file [env: SOLAR_SAVE_AS=] [possible values: csv, json]
   -h, --help         Print help
-```
+````
 
 ```bash
 ❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01
