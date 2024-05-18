@@ -1,4 +1,4 @@
-use clap::Args;
+use clap::{Args, ValueEnum};
 use serde::Serialize;
 
 #[derive(Args, Debug, Serialize)]
@@ -13,6 +13,16 @@ pub struct Power {
     pub ssid: u32,
 
     /// Pass the day you want to fetch data for
-    #[arg(long, value_enum, env = "SOLAR_DATE")]
+    #[arg(long, env = "SOLAR_DATE")]
     pub date: String,
+
+    /// Save the response in a CSV or JSON file
+    #[arg(long, value_enum, env = "SOLAR_SAVE_AS")]
+    pub save: Option<FileType>,
+}
+
+#[derive(Clone, Debug, ValueEnum, Serialize)]
+pub enum FileType {
+    Csv,
+    Json,
 }

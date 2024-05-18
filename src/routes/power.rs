@@ -1,31 +1,11 @@
 use prost::Message;
 use serde_json::json;
-use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
 pub mod grid {
     pub mod power {
         include!(concat!(env!("OUT_DIR"), "/power.rs"));
-    }
-}
-
-impl Display for grid::power::GridPowerResponse {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(pd) = self.pd.clone() {
-            // Print the table header
-            writeln!(f, "{:<8} | {:>10}", "Time", "Power")?;
-            writeln!(f, "{:-<8}-+-{:->10}", "", "")?;
-
-            // Iterate over the times and power readings and print them in a table
-            for (time, power) in self.time.iter().zip(pd.power.iter()) {
-                writeln!(f, "{:<8} | {:>10.2}", time, power)?;
-            }
-        } else {
-            writeln!(f, "No power data available.")?;
-        }
-
-        Ok(())
     }
 }
 
@@ -44,7 +24,17 @@ pub(crate) enum Error {
     DecodePowerData(String),
 }
 
-pub(crate) async fn fetch_power_data(ssid: u32, date: String, token: String) -> Result<(), Error> {
+#[derive(Debug, Serialize)]
+pub(crate) struct PowerRecord {
+    pub(crate) time: String,
+    pub(crate) power: f32,
+}
+
+pub(crate) async fn fetch_power_data(
+    ssid: u32,
+    date: String,
+    token: String,
+) -> Result<Vec<PowerRecord>, Error> {
     let client = reqwest::Client::new();
 
     let url = "https://neapi.hoymiles.com/pvm-data/api/0/station/data/count_power_by_day";
@@ -62,6 +52,8 @@ pub(crate) async fn fetch_power_data(ssid: u32, date: String, token: String) -> 
         .await
         .map_err(|e| Error::FetchPowerData(e.to_string()))?;
 
+    let mut records: Vec<PowerRecord> = Vec::new();
+
     if response.status().is_success() {
         let bytes = response.bytes().await.unwrap();
         if let Ok(hoymiles_response) = serde_json::from_slice::<HoyMilesResponse>(&bytes) {
@@ -74,8 +66,16 @@ pub(crate) async fn fetch_power_data(ssid: u32, date: String, token: String) -> 
         } else {
             match grid::power::GridPowerResponse::decode(bytes) {
                 Ok(decoded) => {
-                    println!("{}", decoded);
-                    Ok(())
+                    if let Some(pd) = decoded.pd {
+                        for (time, power) in decoded.time.iter().zip(pd.power.iter()) {
+                            records.push(PowerRecord {
+                                time: time.clone(),
+                                power: *power,
+                            });
+                        }
+                    }
+
+                    Ok(records)
                 }
                 Err(e) => Err(Error::DecodePowerData(format!(
                     "Failed to decode response: {}",

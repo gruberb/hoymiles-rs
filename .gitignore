@@ -15,3 +15,5 @@ Cargo.lock
 
 .DS_STORE
 .env
+grid_power.csv
+grid_power.json

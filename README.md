@@ -47,6 +47,20 @@ Set HOYMILES_TOKEN env variable successfully.
 This will overwrite the `HOYMILES_TOKEN` value in your `.env` file. Afterwards, we can start reading data from a specific installation for a specific day.
 
 ```bash
+❯ ./target/release/hoymiles-rs power --help
+Fetch your daily power data from a specific solar installation
+
+Usage: hoymiles-rs power [OPTIONS] --ssid <SSID> --date <DATE>
+
+Options:
+      --ssid <SSID>  Pass the SSID of your solar installation [env: SOLAR_SSID=]
+  -v, --verbose...   Defines the verbosity level
+      --date <DATE>  Pass the day you want to fetch data for [env: SOLAR_DATE=]
+      --save <SAVE>  Save the response in a CSV or JSON file [env: SOLAR_SAVE_AS=] [possible values: csv, json]
+  -h, --help         Print help
+```
+
+```bash
 ❯ ./target/release/hoymiles-rs power --ssid 123456789 --date 2024-01-01
 Time     |      Power
 ---------+-----------
@@ -60,8 +74,11 @@ Time     |      Power
 06:15    |     340.90
 06:30    |     576.90
 06:45    |     895.90
-07:00    |    1269.50
-07:15    |    1485.00
-07:30    |    1472.70
-07:45    |    1874.50
+```
+
+We can also save it to a `JSON` or `CSV` file.
+
+```bash
+❯ ./target/release/hoymiles-rs power --ssid 123456789 --date 2024-01-01 --save csv
+Data saved in grid_power.csv
 ```
