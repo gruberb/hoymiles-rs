@@ -1,6 +1,6 @@
 [package]
 name = "hoymiles-rs"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Bastian Gruber <foreach@me.com>"]
 rust-version = "1.73"
