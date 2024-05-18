@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package power;
+
+message PowerData {
+    string type = 1;
+    repeated float power = 2 [packed=true];
+}
+
+message GridPowerResponse {
+    repeated string time = 1;
+    PowerData pd = 2;
+    string date = 3;
+}
