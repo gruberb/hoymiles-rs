@@ -8,7 +8,6 @@ description = "A CLI to interact with Hoymiles solar panel installations and fet
 readme = "README.md"
 repository = "https://github.com/gruberb/hoymiles-rs"
 license = "MIT"
-license-file = "LICENSE"
 keywords = ["hoymiles", "solarpanel", "cli", "api", "monitoring"]
 categories = ["command-line-utilities", "network-programming"]
 build = "build.rs"
