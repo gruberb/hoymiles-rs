@@ -12,17 +12,23 @@ Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-## Install
+## Setting up development
 
 - `git clone git@github.com:gruberb/hoymiles-rs.git`
 - `cd hoymiles-rs`
 - Create `.env` file with the key `HOYMILES_TOKEN=`.
 - `cargo build --release`
 
+## Easy Installation
+
+```bash
+> cargo install hoymiles-rs
+```
+
 ## Usage
 
 ```bash
-❯ ./target/release/hoymiles-rs
+❯ hoymiles-rs
 A CLI to interact with your HoyMiles solar installation
 
 Usage: hoymiles-rs [OPTIONS] <COMMAND>
@@ -40,14 +46,14 @@ Options:
 We first need to get the token from HoyMiles.
 
 ```bash
-❯ ./target/release/hoymiles-rs login --user-name USERNAME --password PASSWORD
+❯ hoymiles-rs login --user-name USERNAME --password PASSWORD
 Set HOYMILES_TOKEN env variable successfully.
 ```
 
 This will overwrite the `HOYMILES_TOKEN` value in your `.env` file. Afterwards, we can start reading data from a specific installation for a specific day.
 
 ```bash
-❯ ./target/release/hoymiles-rs power --help
+❯ hoymiles-rs power --help
 Fetch your daily power data from a specific solar installation
 
 Usage: hoymiles-rs power [OPTIONS] --ssid <SSID> --date <DATE>
@@ -61,7 +67,7 @@ Options:
 ```
 
 ```bash
-❯ ./target/release/hoymiles-rs power --ssid 123456789 --date 2024-01-01
+❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01
 Time     |      Power
 ---------+-----------
 00:00    |       0.00
@@ -79,6 +85,6 @@ Time     |      Power
 We can also save it to a `JSON` or `CSV` file.
 
 ```bash
-❯ ./target/release/hoymiles-rs power --ssid 123456789 --date 2024-01-01 --save csv
+❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01 --save csv
 Data saved in grid_power.csv
 ```
