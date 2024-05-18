@@ -33,7 +33,7 @@ pub(crate) async fn handle_command(cmd: Power) {
                     }
                     FileType::Json => {
                         let json_file = std::fs::File::create("grid_power.json").unwrap();
-                        serde_json::to_writer_pretty(json_file, &power_data).unwrap();
+                        serde_json::to_writer_pretty(json_file, &power_data.unwrap()).unwrap();
                         println!("Data saved in grid_power.json");
                     }
                 }
