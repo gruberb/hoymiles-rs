@@ -1,8 +1,7 @@
 use serde::Deserialize;
 use serde_json::json;
 
-pub(crate) const LOGIN_URL: &str =
-    "https://global.hoymiles.com/platform/api/gateway/iam/auth_login";
+use super::LOGIN_URL;
 
 #[allow(unused)]
 #[derive(Debug, Deserialize)]

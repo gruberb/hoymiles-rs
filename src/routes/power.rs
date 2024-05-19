@@ -1,6 +1,8 @@
 use prost::Message;
 use serde_json::json;
 
+use super::get_url;
+use crate::components::power::command::Resolution;
 use serde::{Deserialize, Serialize};
 
 pub mod grid {
@@ -26,21 +28,23 @@ pub(crate) enum Error {
 
 #[derive(Debug, Serialize)]
 pub(crate) struct PowerRecord {
+    pub(crate) date: String,
     pub(crate) time: String,
     pub(crate) power: f32,
 }
 
 pub(crate) async fn fetch_power_data(
-    ssid: u32,
+    sid: u32,
     date: String,
     token: String,
+    resolution: Resolution,
 ) -> Result<Vec<PowerRecord>, Error> {
     let client = reqwest::Client::new();
 
-    let url = "https://neapi.hoymiles.com/pvm-data/api/0/station/data/count_power_by_day";
+    let url = get_url(resolution.clone());
 
     let body = json!({
-        "sid": ssid,
+        "sid": sid,
         "date": date
     });
 
@@ -64,11 +68,39 @@ pub(crate) async fn fetch_power_data(
                 Err(Error::DecodePowerData(("Undefined error").to_string()))
             }
         } else {
+            if resolution == Resolution::Week {
+                match grid::power::WeeklyGridPowerResponse::decode(bytes) {
+                    Ok(decoded) => {
+                        for daily_response in decoded.daily_responses {
+                            for (time, power) in daily_response
+                                .time
+                                .iter()
+                                .zip(daily_response.pd.unwrap().power.iter())
+                            {
+                                records.push(PowerRecord {
+                                    date: daily_response.date.clone(),
+                                    time: time.clone(),
+                                    power: *power,
+                                });
+                            }
+                        }
+
+                        return Ok(records);
+                    }
+                    Err(e) => {
+                        return Err(Error::DecodePowerData(format!(
+                            "Failed to decode response: {}",
+                            e
+                        )))
+                    }
+                }
+            }
             match grid::power::GridPowerResponse::decode(bytes) {
                 Ok(decoded) => {
                     if let Some(pd) = decoded.pd {
                         for (time, power) in decoded.time.iter().zip(pd.power.iter()) {
                             records.push(PowerRecord {
+                                date: decoded.date.clone(),
                                 time: time.clone(),
                                 power: *power,
                             });
@@ -86,7 +118,7 @@ pub(crate) async fn fetch_power_data(
     } else {
         Err(Error::FetchPowerData(format!(
             "Cannot fetch power data: {}",
-            response.status()
+            response.text().await.unwrap()
         )))
     }
 }

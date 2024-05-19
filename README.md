@@ -44,7 +44,7 @@ Options:
 
 We first need to get the token from HoyMiles.
 
-````bash
+```bash
 ❯ hoymiles-rs login --user-name USERNAME --password PASSWORD
 Successfully saved auth token to config file in /Users/username/.config/hoymiles-rs/config.toml
 ```
@@ -55,15 +55,15 @@ Afterwards, we can start reading data from a specific installation for a specifi
 ❯ hoymiles-rs power --help
 Fetch your daily power data from a specific solar installation
 
-Usage: hoymiles-rs power [OPTIONS] --ssid <SSID> --date <DATE>
+Usage: hoymiles-rs power [OPTIONS] --sid <SID> --date <DATE>
 
 Options:
-      --ssid <SSID>  Pass the SSID of your solar installation [env: SOLAR_SSID=]
+      --sid <SID>  Pass the SID of your solar installation [env: SOLAR_SID=]
   -v, --verbose...   Defines the verbosity level
       --date <DATE>  Pass the day you want to fetch data for [env: SOLAR_DATE=]
       --save <SAVE>  Save the response in a CSV or JSON file [env: SOLAR_SAVE_AS=] [possible values: csv, json]
   -h, --help         Print help
-````
+```
 
 ```bash
 ❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01

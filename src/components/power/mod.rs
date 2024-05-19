@@ -15,10 +15,14 @@ pub(crate) async fn handle_command(cmd: Power) {
                 );
                 return;
             }
-            let power_data = fetch_power_data(cmd.ssid, cmd.date, config.hoymiles_token).await;
+            let power_data =
+                fetch_power_data(cmd.sid, cmd.date, config.hoymiles_token, cmd.resolution).await;
 
             if power_data.is_err() {
-                println!("Failed to fetch power data");
+                println!(
+                    "Failed to fetch power data: {:#?}",
+                    power_data.err().unwrap()
+                );
                 std::process::exit(1);
             }
 
@@ -50,11 +54,14 @@ pub(crate) async fn handle_command(cmd: Power) {
 
 fn print_power_records_table(records: &[PowerRecord]) {
     // Print the table header
-    println!("{:<8} | {:>10}", "Time", "Power");
-    println!("{:-<8}-+-{:->10}", "", "");
+    println!("{:<10} | {:<8} | {:>10}", "Date", "Time", "Power");
+    println!("{:-<10}-+-{:-<8}-+-{:->10}", "", "", "");
 
     // Iterate over the records and print them in a table format
     for record in records {
-        println!("{:<8} | {:>10.2}", record.time, record.power);
+        println!(
+            "{:<10} | {:<8} | {:>10.2}",
+            record.date, record.time, record.power
+        );
     }
 }
