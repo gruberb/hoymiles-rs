@@ -8,9 +8,9 @@ use serde::Serialize;
 )]
 #[serde(rename_all = "kebab-case")]
 pub struct Compare {
-    /// Pass the SSID of your solar installation
-    #[arg(long, env = "SOLAR_SSID")]
-    pub ssids: Vec<u32>,
+    /// Pass the SIDs of your solar installation
+    #[arg(long, env = "SOLAR_SIDS")]
+    pub sids: Vec<u32>,
 
     /// Pass the day you want to fetch data for
     #[arg(long, env = "SOLAR_DATE")]

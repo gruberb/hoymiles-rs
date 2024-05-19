@@ -49,24 +49,25 @@ We first need to get the token from HoyMiles.
 Successfully saved auth token to config file in /Users/username/.config/hoymiles-rs/config.toml
 ```
 
-Afterwards, we can start reading data from a specific installation for a specific day.
+Afterwards, we can start reading data from a specific installation for a specific day and the resolution we want (day | week | month | year).
 
 ```bash
 ❯ hoymiles-rs power --help
 Fetch your daily power data from a specific solar installation
 
-Usage: hoymiles-rs power [OPTIONS] --sid <SID> --date <DATE>
+Usage: hoymiles-rs power [OPTIONS] --sid <SID> --date <DATE> --resolution <RESOLUTION>
 
 Options:
-      --sid <SID>  Pass the SID of your solar installation [env: SOLAR_SID=]
-  -v, --verbose...   Defines the verbosity level
-      --date <DATE>  Pass the day you want to fetch data for [env: SOLAR_DATE=]
-      --save <SAVE>  Save the response in a CSV or JSON file [env: SOLAR_SAVE_AS=] [possible values: csv, json]
-  -h, --help         Print help
+      --sid <SID>                Pass the SID of your solar installation [env: SOLAR_SID=]
+  -v, --verbose...               Defines the verbosity level
+      --date <DATE>              Pass the day you want to fetch data for [env: SOLAR_DATE=]
+      --resolution <RESOLUTION>  Pass the day you want to fetch data for [env: SOLAR_DATE=] [possible values: day, week, month, year]
+      --save <SAVE>              Save the response in a CSV or JSON file [env: SOLAR_SAVE_AS=] [possible values: csv, json]
+  -h, --help                     Print help
 ```
 
 ```bash
-❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01
+❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01 --resolution day
 Time     |      Power
 ---------+-----------
 00:00    |       0.00
@@ -84,6 +85,6 @@ Time     |      Power
 We can also save it to a `JSON` or `CSV` file.
 
 ```bash
-❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01 --save csv
+❯ hoymiles-rs power --ssid 123456789 --date 2024-01-01 --resolution day --save csv
 Data saved in grid_power.csv
 ```
