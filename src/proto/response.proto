@@ -12,3 +12,18 @@ message GridPowerResponse {
     PowerData pd = 2;
     string date = 3;
 }
+
+
+message WeeklyGridPowerResponse {
+    repeated GridPowerResponse daily_responses = 1;
+}
+
+message MonthGridPowerResponse {
+    repeated string day = 1;
+    PowerData pd = 2;
+}
+
+message YearGridPowerResponse {
+    repeated string date = 1;
+    PowerData pd = 2;
+}
