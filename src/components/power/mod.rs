@@ -5,6 +5,7 @@ use crate::{
     config::read_config,
     routes::power::{fetch_power_data, PowerRecord},
 };
+use chrono::NaiveDate;
 
 pub(crate) async fn handle_command(cmd: Power) {
     match read_config() {
@@ -17,7 +18,7 @@ pub(crate) async fn handle_command(cmd: Power) {
             }
             let power_data = fetch_power_data(
                 cmd.sid,
-                cmd.date,
+                cmd.date.clone(),
                 config.hoymiles_token,
                 cmd.resolution.clone(),
             )
@@ -48,7 +49,7 @@ pub(crate) async fn handle_command(cmd: Power) {
                     }
                 }
             } else {
-                print_power_records_table(&power_data.unwrap(), cmd.resolution);
+                print_power_records_table(&power_data.unwrap(), cmd.resolution, cmd.date);
             }
         }
         Err(_) => println!(
@@ -57,17 +58,21 @@ pub(crate) async fn handle_command(cmd: Power) {
     }
 }
 
-fn print_power_records_table(records: &[PowerRecord], resolution: Resolution) {
+fn print_power_records_table(records: &[PowerRecord], resolution: Resolution, date: String) {
+    let date = NaiveDate::parse_from_str(&date, "%Y-%m-%d").unwrap();
+    let year = date.format("%Y");
+    let month = date.format("%m");
+
     if resolution == Resolution::Month {
         // Print the table header
-        println!("{:<10} | {:>10}", "Day", "Power");
+        println!("{:<10} | {:>10}", "Date", "Power");
         println!("{:-<10}-+-{:->10}", "", "");
 
         // Iterate over the records and print them in a table format
         for record in records {
             println!(
                 "{:<10} | {:>10.2}",
-                record.day.as_ref().unwrap(),
+                year.to_string() + "-" + &month.to_string() + "-" + record.day.as_ref().unwrap(),
                 record.power
             );
         }

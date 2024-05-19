@@ -70,10 +70,10 @@ pub(crate) async fn fetch_power_data(
             }
         } else {
             match resolution {
-                Resolution::Day => return decode_daily_power_data(bytes, records),
-                Resolution::Week => return decode_weekly_power_data(bytes, records),
-                Resolution::Month => return decode_monthly_power_data(bytes, records),
-                Resolution::Year => return decode_yearly_power_data(bytes, records),
+                Resolution::Day => decode_daily_power_data(bytes, records),
+                Resolution::Week => decode_weekly_power_data(bytes, records),
+                Resolution::Month => decode_monthly_power_data(bytes, records),
+                Resolution::Year => decode_yearly_power_data(bytes, records),
             }
         }
     } else {
