@@ -1,6 +1,6 @@
 pub(crate) mod command;
 
-use self::command::{FileType, Power};
+use self::command::{FileType, Power, Resolution};
 use crate::{
     config::read_config,
     routes::power::{fetch_power_data, PowerRecord},
@@ -15,8 +15,13 @@ pub(crate) async fn handle_command(cmd: Power) {
                 );
                 return;
             }
-            let power_data =
-                fetch_power_data(cmd.sid, cmd.date, config.hoymiles_token, cmd.resolution).await;
+            let power_data = fetch_power_data(
+                cmd.sid,
+                cmd.date,
+                config.hoymiles_token,
+                cmd.resolution.clone(),
+            )
+            .await;
 
             if power_data.is_err() {
                 println!(
@@ -43,7 +48,7 @@ pub(crate) async fn handle_command(cmd: Power) {
                     }
                 }
             } else {
-                print_power_records_table(&power_data.unwrap());
+                print_power_records_table(&power_data.unwrap(), cmd.resolution);
             }
         }
         Err(_) => println!(
@@ -52,7 +57,41 @@ pub(crate) async fn handle_command(cmd: Power) {
     }
 }
 
-fn print_power_records_table(records: &[PowerRecord]) {
+fn print_power_records_table(records: &[PowerRecord], resolution: Resolution) {
+    if resolution == Resolution::Month {
+        // Print the table header
+        println!("{:<10} | {:>10}", "Day", "Power");
+        println!("{:-<10}-+-{:->10}", "", "");
+
+        // Iterate over the records and print them in a table format
+        for record in records {
+            println!(
+                "{:<10} | {:>10.2}",
+                record.day.as_ref().unwrap(),
+                record.power
+            );
+        }
+
+        return;
+    }
+
+    if resolution == Resolution::Year {
+        // Print the table header
+        println!("{:<10} | {:>10}", "Date", "Power");
+        println!("{:-<10}-+-{:->10}", "", "");
+
+        // Iterate over the records and print them in a table format
+        for record in records {
+            println!(
+                "{:<10} | {:>10.2}",
+                record.date.as_ref().unwrap(),
+                record.power
+            );
+        }
+
+        return;
+    }
+
     // Print the table header
     println!("{:<10} | {:<8} | {:>10}", "Date", "Time", "Power");
     println!("{:-<10}-+-{:-<8}-+-{:->10}", "", "", "");
@@ -61,7 +100,9 @@ fn print_power_records_table(records: &[PowerRecord]) {
     for record in records {
         println!(
             "{:<10} | {:<8} | {:>10.2}",
-            record.date, record.time, record.power
+            record.date.as_ref().unwrap(),
+            record.time.as_ref().unwrap(),
+            record.power
         );
     }
 }

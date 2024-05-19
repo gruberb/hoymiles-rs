@@ -471,6 +471,7 @@ dependencies = [
 name = "hoymiles-rs"
 version = "1.1.1"
 dependencies = [
+ "bytes",
  "clap",
  "csv",
  "dirs",
