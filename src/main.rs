@@ -34,6 +34,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match args.commands {
         HoyMilesCommand::Login(cmd) => components::login::handle_command(cmd).await,
         HoyMilesCommand::Power(cmd) => components::power::handle_command(cmd).await,
+        HoyMilesCommand::Report(cmd) => components::report::handle_command(cmd).await,
     }
 
     std::process::exit(0);
@@ -43,4 +44,5 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 pub(crate) enum HoyMilesCommand {
     Login(components::login::command::Login),
     Power(components::power::command::Power),
+    Report(components::report::command::Report),
 }
